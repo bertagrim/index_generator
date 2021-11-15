@@ -22,7 +22,7 @@ nlp = spacy.load('en_core_web_sm')
 
 def create_candidates_list(bigrams_contexts):
     candidates=[]
-    dismiss=[]
+    dismiss=['-','i']
     for item in bigrams_contexts:
         doc=nlp((' ').join(item[1]))
         for word in item[1]:
@@ -98,10 +98,10 @@ def get_candidates_and_frequencies(split_data):
         zip(list_bigrams_str, sentences, raw_sent)
     )
 
-    candidates_lists = create_candidates_list(bigrams_and_contexts)
+    candidates_list = create_candidates_list(bigrams_and_contexts)
 
     candidates_df = pd.DataFrame(
-        candidates_lists,
+        candidates_list,
         columns=[
             'candidate_keyword',
             'clean_context',
@@ -128,8 +128,8 @@ def get_frequency_calculator(book_length, freq_ngrams):
         # TODO: Figure out why is this sometimes None
         # -> It's because of the call to npl above.
         count = freq_ngrams.get(candidate_keyword)
-        if count is None:
-            # print(candidate_keyword + " is not in freq_ngrams!!")
+        if candidate_keyword not in freq_ngrams:
+            print(candidate_keyword + " is not in freq_ngrams!!")
             return 0
         else:
             return count / book_length
@@ -454,26 +454,19 @@ def add_is_in_index(candidates_df, indexes_list):
 # 11. Aggregate lines with duplicated candidate_keyword
 
 def aggregate_by_candidate(candidates_df):
-    candidates_df.drop(
-        columns=['clean_context', 'raw_context'], inplace=True, errors='ignore'
+    candidates_df=candidates_df.drop(
+        columns=['clean_context', 'raw_context'], errors='ignore'
     )
-    candidates_df.groupby(
+    candidates_df=candidates_df.groupby(
         [
             'candidate_keyword',
             'length',
-            'POS',
             'is_named_entity',
             'is_named_author',
             'is_in_toc',
-            'importance',
+            'freq',
             'is_in_index',
             'tfidf'
         ], as_index=False
-    ).agg({'freq': np.mean, 'position_in_context': np.mean}, inplace=True, )
-    candidates_df.drop(
-        columns=['POS'], inplace=True, errors='ignore'
-    )
-    pairs = candidates_df.groupby(
-        ['candidate_keyword'], as_index=False
-    ).first()
-    return pd.DataFrame(pairs)
+    ).agg({'importance': np.mean, 'position_in_context': np.mean, 'POS':pd.Series.mode})
+    return candidates_df
