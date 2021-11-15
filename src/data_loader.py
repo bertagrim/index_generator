@@ -92,10 +92,10 @@ def load_split_data(processed_data_dir_path, pdf_filepath):
     by_line_toc = pd.read_csv(by_line_toc_file_path, index_col=0)
     by_page_body = pd.read_csv(by_page_body_file_path, index_col=0)
 
-    by_line_body['clean_content'] = by_line_body['clean_content'].fillna('')
-    by_page_body['clean_content'] = by_page_body['clean_content'].fillna('')
-    by_line_toc['content'] = by_line_toc['content'].fillna('')
-    by_line_index['content'] = by_line_index['content'].fillna('')
+    by_line_body = by_line_body.fillna('')
+    by_page_body = by_page_body.fillna('')
+    by_line_toc = by_line_toc.fillna('')
+    by_line_index = by_line_index.fillna('')
 
     return {
         'file_name': file_base_name + ".pdf",

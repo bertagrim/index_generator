@@ -358,8 +358,8 @@ def add_is_named_author(candidates_df, df_pages_biblio):
 # 9. Column: tf-idf score
 
 
-def add_tfidf(candidates_df, df_cann_pages_body):
-    grouped_by_sections = df_cann_pages_body.groupby(
+def add_tfidf(candidates_df, df_pages_body):
+    grouped_by_sections = df_pages_body.groupby(
         ['section_level_1', 'section_level_2', 'section_level_3']
     )['clean_content'].apply(' '.join).reset_index()
 
