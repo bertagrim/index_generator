@@ -45,16 +45,16 @@ def get_raw_sentences(raw_sent):
 
 
 def get_candidates_and_frequencies(split_data):
-    by_line_body_content = split_data['by_line_body']['clean_content']
+    by_line_body_content = split_data['by_line_body']
 
     # print(list(by_line_body_content))
 
     sentences = [
-        sentence.split() for sentence in by_line_body_content
+        sentence.split() for sentence in by_line_body_content['clean_content']
     ]
 
     whole_text = ''
-    for sentence in by_line_body_content:
+    for sentence in by_line_body_content['clean_content']:
         whole_text += ' '
         whole_text += sentence
 
@@ -76,7 +76,7 @@ def get_candidates_and_frequencies(split_data):
 
     list_bigrams_lines = [
         list(ngrams(sentence.split(), 2))
-        for sentence in by_line_body_content
+        for sentence in by_line_body_content['clean_content']
     ]
 
     list_bigrams_str = []
@@ -89,7 +89,7 @@ def get_candidates_and_frequencies(split_data):
     list_bigrams_str
 
     raw_sent = []
-    for sent in by_line_body_content:
+    for sent in by_line_body_content['content']:
         raw_sent.append(get_raw_sentences(sent))
 
     bigrams_and_contexts = list(
