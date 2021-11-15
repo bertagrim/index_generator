@@ -22,7 +22,7 @@ nlp = spacy.load('en_core_web_sm')
 
 def create_candidates_list(bigrams_contexts):
     candidates=[]
-    dismiss=['-','i']
+    dismiss=['-','i','d','m']
     for item in bigrams_contexts:
         doc=nlp((' ').join(item[1]))
         for word in item[1]:
@@ -125,8 +125,6 @@ def get_book_length(by_ages_body_df):
 
 def get_frequency_calculator(book_length, freq_ngrams):
     def assign_frequency(candidate_keyword):
-        # TODO: Figure out why is this sometimes None
-        # -> It's because of the call to npl above.
         count = freq_ngrams.get(candidate_keyword)
         if candidate_keyword not in freq_ngrams:
             print(candidate_keyword + " is not in freq_ngrams!!")
@@ -228,7 +226,7 @@ def add_importance(candidates_df):
 # 5. Column: position in sentence
 
 
-def return_pos(row):
+def return_position_in_context(row):
     list_words = row['raw_context'].split(' ')
     word = row['candidate_keyword']
     if len(list_words) == 1:
@@ -236,24 +234,14 @@ def return_pos(row):
     else:
         if len(word) > 1:
             word = word.split(' ')[0]
-            if word in list_words:
-                return list_words.index(word)/(len(list_words)-1)
-            else:
-                # TODO: Decide what to do here
-                # print(word + " is not in " + str(list_words) + "!")
-                return 0
+            return list_words.index(word)/(len(list_words)-1)
         else:
-            if word in list_words:
-                return list_words.index(word)/(len(list_words)-1)
-            else:
-                # TODO: Decide what to do here
-                # print(word + " is not in " + str(list_words) + "!")
-                return 0
+            return list_words.index(word)/(len(list_words)-1)
 
 
 def add_position_in_context(candidates_df):
     candidates_df['position_in_context'] = candidates_df.apply(
-        return_pos, axis=1
+        return_position_in_context, axis=1
     )
     return candidates_df
 
