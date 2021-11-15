@@ -20,19 +20,21 @@ nlp = spacy.load('en_core_web_sm')
 
 # 1. Get candidates plus frequencies
 
-def create_candidates_lists(bigrams_contexts):
-    candidates = []
+def create_candidates_list(bigrams_contexts):
+    candidates=[]
+    dismiss=[]
     for item in bigrams_contexts:
-        doc = nlp((' ').join(item[1]))
-        for w in item[1]:
-            if re.match("[a-z]+-[a-z]+", w):
-                candidates.append([w, item[1], item[2], 'NOUN'])
-            else:
-                for w in doc:
-                    candidates.append([str(w), item[1], item[2], w.pos_])
+        doc=nlp((' ').join(item[1]))
+        for word in item[1]:
+            if re.match("[a-z]+-[a-z]+", word):
+                candidates.append([word, item[1], item[2], 'NOUN'])
+                dismiss+=word.split('-')
+        for w in doc:
+            if not(str(w) in dismiss):
+                candidates.append([str(w), item[1], item[2], w.pos_])
         for w in item[0]:
             candidates.append([w, item[1], item[2], 'CHUNK'])
-    return candidates
+    return candidates 
 
 
 def get_raw_sentences(raw_sent):
@@ -96,7 +98,7 @@ def get_candidates_and_frequencies(split_data):
         zip(list_bigrams_str, sentences, raw_sent)
     )
 
-    candidates_lists = create_candidates_lists(bigrams_and_contexts)
+    candidates_lists = create_candidates_list(bigrams_and_contexts)
 
     candidates_df = pd.DataFrame(
         candidates_lists,
