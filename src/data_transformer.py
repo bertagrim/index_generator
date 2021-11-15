@@ -275,7 +275,7 @@ def clean_list_names(x):
 def find_named_entities(df_pages_body):
     named_entities = []
     for page in df_pages_body.content:
-        page_named_entities = re.findall('(?<=[a-zA-Z] )[A-Z]+[a-z]+', page)
+        page_named_entities = re.findall('(?<=[a-zA-Z] )[A-Z]+[a-z]+[A-Z]*[a-z]*', page)
         for item in page_named_entities:
             named_entities.append(clean_list_names(item))
     return named_entities
@@ -337,8 +337,8 @@ def find_authors_in_biblio(df_pages_biblio):
     return clean_list_authors
 
 
-def add_is_named_author(candidates_df, df_cann_pages_biblio):
-    unique_authors = set(find_authors_in_biblio(df_cann_pages_biblio))
+def add_is_named_author(candidates_df, df_pages_biblio):
+    unique_authors = set(find_authors_in_biblio(df_pages_biblio))
 
     def is_named_author(x, unique_authors):
         if x in unique_authors:
