@@ -106,13 +106,13 @@ def get_index(data_frame):
 def get_biblio(data_frame):
     biblio = data_frame[
         data_frame.section_level_1.str.match(
-            "REFERENCES|References|references|Bibliography|bibliography"
+            "REFERENCES|References|references|Bibliography|bibliography|Selected HistoricalWorks on Linear Algebra"
         ) |
         data_frame.section_level_2.str.match(
-            "REFERENCES|References|references|Bibliography|bibliography"
+            "REFERENCES|References|references|Bibliography|bibliography|Selected HistoricalWorks on Linear Algebra"
         ) |
         data_frame.section_level_3.str.match(
-            "REFERENCES|References|references|Bibliography|bibliography"
+            "REFERENCES|References|references|Bibliography|bibliography|Selected HistoricalWorks on Linear Algebra"
         )
     ]
     biblio.reset_index(drop=True, inplace=True)
