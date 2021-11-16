@@ -31,7 +31,9 @@ part_limits = {
         'body':  [21, 426]
     },
     'jenkins_08': {
-        'body': [15, 285]
+        'body': [15, 285],
+        'biblio': [287, 297],
+        'index': [299, 304]
     },
     'keefe_00': {
         'body': [13, 232],
@@ -66,7 +68,9 @@ part_limits = {
         'body': [9, 173]
     },
     'shapiro_97': {
-        'body': [14, 272]
+        'body': [14, 272],
+        'biblio': [274, 283],
+        'index': [284, 290]
     },
     'stenning_08': {
         'body': [15, 380]

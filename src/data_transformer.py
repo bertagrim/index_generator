@@ -23,7 +23,7 @@ nlp = spacy.load('en_core_web_sm')
 
 def create_candidates_list(bigrams_contexts):
     candidates=[]
-    dismiss=['-','i','d','m','the','is','—', '–', 'elementsâ•', '…', 'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-', 'equilibrium-', 'af12', 'g', 'neutrality-','along-']
+    dismiss=['-','i','d','m','the','is','—', '–', 'à-vis', 'de', 'nitions', 'speci', 'elementsâ•', 'cation', 'nability', 'nition', '…', '®', 'ned',  'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-', 'equilibrium-', 'af12', 'g', 'neutrality-','along-']
     for item in bigrams_contexts:
         doc=nlp((' ').join(item[1]))
         for word in item[1]:
@@ -239,8 +239,8 @@ def return_position_in_context(row):
     list_words=sum([w.split('–') for w in list_words],[])
         
     word = row['candidate_keyword']
-    if word not in list_words:
-       print(word, row['raw_context'])
+    #if word not in list_words:
+    #   print(word, row['raw_context'])
     if len(list_words) == 1:
         return 0
     else:
