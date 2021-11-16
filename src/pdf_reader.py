@@ -35,8 +35,8 @@ def num2roman(num):
 def get_dict_pages(filepath):
     dict_pages = {}
     with fitz.open(filepath) as doc:
-        page_num = doc.get_page_labels()
-    for item in page_num:
+        page_labels = doc.get_page_labels()
+    for item in page_labels:
         abs_page = item['startpage']
         if item['prefix'] != '':
             real_page = item['prefix']
@@ -86,9 +86,19 @@ def translate(filepath):
 
 
 def get_number_translator(filepath):
-    def translate_number(x):
+    trans_dict = None
+
+    try:
         trans_dict = translate(filepath)
-        return trans_dict[x]
+    except:
+        pass
+
+    def translate_number(x):
+        if trans_dict is None:
+            return x
+        else:
+            return trans_dict[x]
+
     return translate_number
 
 
@@ -255,13 +265,17 @@ def extend_pages_df(file_path, pages_df):
     dictionary2 = dictionary_per_level_2(file_path)
     dictionary3 = dictionary_per_level_3(file_path)
     pages_df['real_page_num'] = pages_df['page_number'].apply(
-        get_number_translator(file_path))
+        get_number_translator(file_path)
+    )
     pages_df['section_level_1'] = pages_df['page_number'].apply(
-        lambda x: dictionary1[x])
+        lambda x: dictionary1[x]
+    )
     pages_df['section_level_2'] = pages_df['page_number'].apply(
-        lambda x: dictionary2[x])
+        lambda x: dictionary2[x]
+    )
     pages_df['section_level_3'] = pages_df['page_number'].apply(
-        lambda x: dictionary3[x])
+        lambda x: dictionary3[x]
+    )
     return pages_df
 
 
