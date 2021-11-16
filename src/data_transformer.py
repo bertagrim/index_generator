@@ -23,7 +23,7 @@ nlp = spacy.load('en_core_web_sm')
 
 def create_candidates_list(bigrams_contexts):
     candidates=[]
-    dismiss=['-','i','d','m','the','is','—', '–', 'à-vis', 'de', 'nitions', 'speci', 'elementsâ•', 'cation', 'nability', 'nition', '…', '®', 'ned',  'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-', 'equilibrium-', 'af12', 'g', 'neutrality-','along-']
+    dismiss=['-','i','d','m','the','is','—', 'so-', 'notice-', 'nt', 'wo', 'temporal-', '–', 'value-', 'numbers-', 'à-vis', 'de', 'nitions', 'speci', 'elementsâ•', 'cation', 'nability', 'nition', '…', '®', 'ned',  'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-', 'equilibrium-', 'af12', 'g', 'neutrality-','along-']
     for item in bigrams_contexts:
         doc=nlp((' ').join(item[1]))
         for word in item[1]:

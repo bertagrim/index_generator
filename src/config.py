@@ -53,7 +53,9 @@ part_limits = {
         'body': [18, 359]
     },
     'moltmann_97': {
-        'body': [15, 258]
+        'body': [15, 258],
+        'biblio': [259, 264],
+        'index': [265, 268]
     },
     'morris_07': {
         'body': [12, 326]
@@ -76,7 +78,8 @@ part_limits = {
         'body': [15, 380]
     },
     'williamson_94': {
-        'body': [15, 320]
+        'body': [15, 320],
+        'toc': [7, 9]
     },
     'winter_16': {
         'body': [13, 257]
