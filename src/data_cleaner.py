@@ -148,7 +148,8 @@ def clean_initial_indexes(line_and_page_indexes):
 def clean_text(text_data):
     tokens = word_tokenize(text_data)
     no_weird_dash=[w.replace('—','-') for w in tokens]
-    no_slash=sum([w.split('/') for w in no_weird_dash],[])
+    no_weird_dash2=[w.replace('-','-') for w in no_weird_dash]
+    no_slash=sum([w.split('/') for w in no_weird_dash2],[])
     lowercased = [w.lower() for w in no_slash]
     no_punct = [
         word for word in lowercased if (

@@ -23,11 +23,12 @@ nlp = spacy.load('en_core_web_sm')
 
 def create_candidates_list(bigrams_contexts):
     candidates=[]
-    dismiss=['-','i','d','m','the','is','—', 'elementsâ•', '…', 'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-']
+    dismiss=['-','i','d','m','the','is','—', '–', 'elementsâ•', '…', 'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-', 'equilibrium-', 'af12', 'g', 'neutrality-','along-']
     for item in bigrams_contexts:
         doc=nlp((' ').join(item[1]))
         for word in item[1]:
             word=word.replace('—','-')
+            word=word.replace('-','-')
             if re.match("[a-z]+-[a-z]+(-[a-z])*", word):
                 candidates.append([word, item[1], item[2], 'NOUN'])
                 dismiss+=word.split('-')
@@ -42,7 +43,8 @@ def create_candidates_list(bigrams_contexts):
 def get_raw_sentences(raw_sent):
     tokens = word_tokenize(raw_sent)
     no_weird_dash=[w.replace('—','-') for w in tokens]
-    no_slash=sum([w.split('/') for w in no_weird_dash],[])
+    no_weird_dash2=[w.replace('-','-') for w in no_weird_dash]
+    no_slash=sum([w.split('/') for w in no_weird_dash2],[])
     lowercased = [w.lower() for w in no_slash]
     no_punct = [word for word in lowercased if (
         word.isalpha() or re.match("[a-z]+-[a-z]+(-[a-z])*", word))]
@@ -234,10 +236,11 @@ def add_importance(candidates_df):
 def return_position_in_context(row):
     list_words = row['raw_context'].split(' ')
     list_words=sum([w.split('/') for w in list_words],[])
+    list_words=sum([w.split('–') for w in list_words],[])
         
     word = row['candidate_keyword']
-    #if word not in list_words:
-       #print(word, row['raw_context'])
+    if word not in list_words:
+       print(word, row['raw_context'])
     if len(list_words) == 1:
         return 0
     else:
