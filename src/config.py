@@ -34,7 +34,9 @@ part_limits = {
         'body': [15, 285]
     },
     'keefe_00': {
-        'body': [13, 232]
+        'body': [13, 232],
+        'biblio': [233, 240],
+        'index': [241, 245]
     },
     'linnebo_18': {
         'body':  [11, 240]

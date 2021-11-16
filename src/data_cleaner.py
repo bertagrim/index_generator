@@ -134,8 +134,8 @@ def get_biblio(file_name, data_frame):
     base_name = pathlib.Path(file_name).stem
     biblio = None
 
-    if 'index' in part_limits[base_name]:
-        [start, end] = part_limits[base_name]['index']
+    if 'biblio' in part_limits[base_name]:
+        [start, end] = part_limits[base_name]['biblio']
         biblio = data_frame[
             (data_frame.page_number >= start) & (data_frame.page_number <= end)
         ]
