@@ -12,6 +12,7 @@ import spacy
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+import scipy
 
 lemmatizer = WordNetLemmatizer()
 
@@ -22,11 +23,12 @@ nlp = spacy.load('en_core_web_sm')
 
 def create_candidates_list(bigrams_contexts):
     candidates=[]
-    dismiss=['-','i','d','m']
+    dismiss=['-','i','d','m','the','is','—', 'elementsâ•', '…', 'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1']
     for item in bigrams_contexts:
         doc=nlp((' ').join(item[1]))
         for word in item[1]:
-            if re.match("[a-z]+-[a-z]+", word):
+            word=word.replace('—','-')
+            if re.match("[a-z]+-[a-z]+(-[a-z])*", word):
                 candidates.append([word, item[1], item[2], 'NOUN'])
                 dismiss+=word.split('-')
         for w in doc:
@@ -39,9 +41,10 @@ def create_candidates_list(bigrams_contexts):
 
 def get_raw_sentences(raw_sent):
     tokens = word_tokenize(raw_sent)
-    lowercased = [w.lower() for w in tokens]
+    no_weird_dash=[w.replace('—','-') for w in tokens]
+    lowercased = [w.lower() for w in no_weird_dash]
     no_punct = [word for word in lowercased if (
-        word.isalpha() or re.match("[a-z]+-[a-z]+", word))]
+        word.isalpha() or re.match("[a-z]+-[a-z]+(-[a-z])*", word))]
     clean_raw_words = [lemmatizer.lemmatize(w) for w in no_punct]
     return (" ").join(clean_raw_words)
 
@@ -127,6 +130,7 @@ def get_frequency_calculator(book_length, freq_ngrams):
     def assign_frequency(candidate_keyword):
         count = freq_ngrams.get(candidate_keyword)
         if candidate_keyword not in freq_ngrams:
+            #print(dismiss)
             print(candidate_keyword + " is not in freq_ngrams!!")
             return 0
         else:
@@ -229,6 +233,8 @@ def add_importance(candidates_df):
 def return_position_in_context(row):
     list_words = row['raw_context'].split(' ')
     word = row['candidate_keyword']
+    #if word not in list_words:
+        #print(word, list_words)
     if len(list_words) == 1:
         return 0
     else:
@@ -456,5 +462,5 @@ def aggregate_by_candidate(candidates_df):
             'is_in_index',
             'tfidf'
         ], as_index=False
-    ).agg({'importance': np.mean, 'position_in_context': np.mean, 'POS':pd.Series.mode})
+    ).agg({'importance': np.mean, 'position_in_context': np.mean, 'POS':lambda x: scipy.stats.mode(x)[0]})
     return candidates_df

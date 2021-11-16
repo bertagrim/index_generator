@@ -5,6 +5,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from config import body_limits
+import pandas as pd
 
 stop_words = stopwords.words("english")
 lemmatizer = WordNetLemmatizer()
@@ -55,13 +56,14 @@ def reset_index(data_frame):
 
 
 def fill_sections_na(data_frame):
-    data_frame.section_level_1.fillna("No info", inplace=True)
-    data_frame.section_level_2.fillna("No info", inplace=True)
-    data_frame.section_level_3.fillna("No info", inplace=True)
+    data_frame.section_level_1.fillna("", inplace=True)
+    data_frame.section_level_2.fillna("", inplace=True)
+    data_frame.section_level_3.fillna("", inplace=True)
     return data_frame
 
 
 def get_toc(data_frame):
+    fill_sections_na(data_frame)
     toc = data_frame[
         data_frame.section_level_1.str.match(
             "CONTENTS|Contents|contents|Table of Contents|Table of contents"
@@ -80,6 +82,9 @@ def get_toc(data_frame):
 def get_body(file_name, data_frame):
     base_name = pathlib.Path(file_name).stem
     [start, end] = body_limits[base_name]
+    #pd.to_numeric(data_frame.page_number)
+    #print(data_frame.page_number)
+
     body = data_frame[
         (data_frame.page_number >= start) & (data_frame.page_number <= end)
     ]
@@ -88,6 +93,7 @@ def get_body(file_name, data_frame):
 
 
 def get_index(data_frame):
+    fill_sections_na(data_frame)
     index = data_frame[
         data_frame.section_level_1.str.match(
             "INDEX|index|Index|Subject Index|Name Index|Language Index|Citation Index|General Index|Author Index|Indicies"
@@ -104,6 +110,7 @@ def get_index(data_frame):
 
 
 def get_biblio(data_frame):
+    fill_sections_na(data_frame)
     biblio = data_frame[
         data_frame.section_level_1.str.match(
             "REFERENCES|References|references|Bibliography|bibliography|Works cited|Selected HistoricalWorks on Linear Algebra"
@@ -140,7 +147,8 @@ def clean_initial_indexes(line_and_page_indexes):
 
 def clean_text(text_data):
     tokens = word_tokenize(text_data)
-    lowercased = [w.lower() for w in tokens]
+    no_weird_dash=[w.replace('—','-') for w in tokens]
+    lowercased = [w.lower() for w in no_weird_dash]
     no_punct = [
         word for word in lowercased if (
             word.isalpha() or re.match("[a-z]+-[a-z]+", word)

@@ -1,8 +1,7 @@
 import pathlib
 
 
-def get_or_create_file_folder_path(processed_data_dir_path, data_frame):
-    file_name = data_frame['file_name']
+def get_or_create_file_folder_path(processed_data_dir_path, file_name):
     file_base_name = ".".join(file_name.split(".")[:-1])
     file_folder_path = pathlib.Path(
         processed_data_dir_path + file_base_name + "/"
@@ -14,7 +13,7 @@ def get_or_create_file_folder_path(processed_data_dir_path, data_frame):
 def save_page_and_line_indexes(processed_data_dir_path, line_and_page_indexes):
     file_folder_path = get_or_create_file_folder_path(
         processed_data_dir_path,
-        line_and_page_indexes
+        line_and_page_indexes['file_name']
     )
     raw_by_lines_file_path = file_folder_path / "raw_by_line.csv"
     raw_by_pages_file_path = file_folder_path / "raw_by_page.csv"
@@ -29,7 +28,7 @@ def save_page_and_line_indexes(processed_data_dir_path, line_and_page_indexes):
 def save_split_data(processed_data_dir_path, split_data):
     file_folder_path = get_or_create_file_folder_path(
         processed_data_dir_path,
-        split_data
+        split_data['file_name']
     )
     by_line_index_file_path = file_folder_path / "by_line_index.csv"
     by_page_biblio_file_path = file_folder_path / "by_page_biblio.csv"
@@ -50,6 +49,16 @@ def save_split_data(processed_data_dir_path, split_data):
     )
     split_data['by_page_body'].to_csv(
         by_page_body_file_path, encoding="utf8", mode='w+'
+    )
+
+def save_aggregated_data(processed_data_dir_path, agg_df, file_name):
+    file_folder_path = get_or_create_file_folder_path(
+        processed_data_dir_path,
+        file_name
+    )
+    aggregated_file_path = file_folder_path / "aggregated.csv"
+    agg_df.to_csv(
+        aggregated_file_path, encoding="utf8", mode='w+'
     )
 
 
