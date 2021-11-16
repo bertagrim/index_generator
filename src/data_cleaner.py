@@ -4,7 +4,7 @@ import pathlib
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-from config import body_limits
+from config import body_limits, section_limits
 import pandas as pd
 
 stop_words = stopwords.words("english")
@@ -81,9 +81,9 @@ def get_toc(data_frame):
 
 def get_body(file_name, data_frame):
     base_name = pathlib.Path(file_name).stem
-    [start, end] = body_limits[base_name]
-    #pd.to_numeric(data_frame.page_number)
-    #print(data_frame.page_number)
+    [start, end] = section_limits['body'][base_name]
+    # pd.to_numeric(data_frame.page_number)
+    # print(data_frame.page_number)
 
     body = data_frame[
         (data_frame.page_number >= start) & (data_frame.page_number <= end)
@@ -147,9 +147,8 @@ def clean_initial_indexes(line_and_page_indexes):
 
 def clean_text(text_data):
     tokens = word_tokenize(text_data)
-    no_weird_dash=[w.replace('—','-') for w in tokens]
-    no_weird_dash2=[w.replace('-','-') for w in no_weird_dash]
-    no_slash=sum([w.split('/') for w in no_weird_dash2],[])
+    no_weird_dash = [w.replace('—', '-') for w in tokens]
+    no_slash = sum([w.split('/') for w in no_weird_dash], [])
     lowercased = [w.lower() for w in no_slash]
     no_punct = [
         word for word in lowercased if (
