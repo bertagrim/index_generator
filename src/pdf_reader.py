@@ -95,7 +95,7 @@ def get_number_translator(filepath):
 def get_bookmarks(filepath):
     bookmarks = {}
     with fitz.open(filepath) as doc:
-        toc = doc.get_toc() 
+        toc = doc.get_toc()
         for level, title, page in toc:
             if page-1 not in bookmarks:
                 bookmarks[page-1] = [[level, title]]
@@ -104,72 +104,73 @@ def get_bookmarks(filepath):
     return bookmarks
 
 
-
 def get_all_sections(filepath):
-    num_pages=get_page_count(filepath)
-    dict_sections=get_bookmarks(filepath)
-    complete_sections_dict={}
-    sect1=''
-    sect2=''
-    sect3=''
+    num_pages = get_page_count(filepath)
+    dict_sections = get_bookmarks(filepath)
+    complete_sections_dict = {}
+    sect1 = ''
+    sect2 = ''
+    sect3 = ''
     for page in dict_sections:
-        if len(dict_sections[page])==1:
+        if len(dict_sections[page]) == 1:
             for item in dict_sections[page]:
-                if item[0]==1:
-                    sect1=item[1]
-                    sect2=''
-                    sect3=''
-                elif item[0]==2:
-                    sect2=item[1] 
-                    sect3=''
-                elif item[0]==3:
-                    sect3=item[1]
-            complete_sections_dict[page]=[[1, sect1], [2, sect2], [3, sect3]]
-        elif len(dict_sections[page])==2:
+                if item[0] == 1:
+                    sect1 = item[1]
+                    sect2 = ''
+                    sect3 = ''
+                elif item[0] == 2:
+                    sect2 = item[1]
+                    sect3 = ''
+                elif item[0] == 3:
+                    sect3 = item[1]
+            complete_sections_dict[page] = [[1, sect1], [2, sect2], [3, sect3]]
+        elif len(dict_sections[page]) == 2:
             for item in dict_sections[page]:
-                if item[0]==1:
-                    sect1=item[1]
-                    sect2=''
-                    sect3=''
-                elif item[0]==2:
-                    sect2=item[1]  
-                    sect3=''
-                elif item[0]==3:
-                    sect3=item[1]
-            complete_sections_dict[page]=[[1, sect1], [2, sect2], [3, sect3]]
-        
-        elif len(dict_sections[page])==3:
+                if item[0] == 1:
+                    sect1 = item[1]
+                    sect2 = ''
+                    sect3 = ''
+                elif item[0] == 2:
+                    sect2 = item[1]
+                    sect3 = ''
+                elif item[0] == 3:
+                    sect3 = item[1]
+            complete_sections_dict[page] = [[1, sect1], [2, sect2], [3, sect3]]
+
+        elif len(dict_sections[page]) == 3:
             for item in dict_sections[page]:
-                if item[0]==1:
-                    sect1=item[1]
-                    sect2=''
-                    sect3=''
-                elif item[0]==2:
-                    sect2=item[1]
-                    sect3=''
-                elif item[0]==3:
-                    sect3=item[1]
-            complete_sections_dict[page]=[[1, sect1], [2, sect2], [3, sect3]]
+                if item[0] == 1:
+                    sect1 = item[1]
+                    sect2 = ''
+                    sect3 = ''
+                elif item[0] == 2:
+                    sect2 = item[1]
+                    sect3 = ''
+                elif item[0] == 3:
+                    sect3 = item[1]
+            complete_sections_dict[page] = [[1, sect1], [2, sect2], [3, sect3]]
         else:
             continue
-    
-    page=list(dict_sections.keys())[0]
-    while page<num_pages:
+
+    page = list(dict_sections.keys())[0]
+    while page < num_pages:
         if page in complete_sections_dict:
-            current_values=complete_sections_dict[page]
-            page+=1
+            current_values = complete_sections_dict[page]
+            page += 1
         else:
-            complete_sections_dict[page]=current_values
-            page+=1
-    
+            complete_sections_dict[page] = current_values
+            page += 1
+
     for page in range(num_pages):
-        if page<num_pages and page not in complete_sections_dict:
-            complete_sections_dict[page]=[[1, 'Out of toc'], [2, 'Out of toc'], [3, 'Out of toc']]
-            page+=1
-            
-    complete_sections_dict = dict(sorted(complete_sections_dict.items(), key = lambda x:x[0]))
+        if page < num_pages and page not in complete_sections_dict:
+            complete_sections_dict[page] = [
+                [1, 'Out of toc'], [2, 'Out of toc'], [3, 'Out of toc']]
+            page += 1
+
+    complete_sections_dict = dict(
+        sorted(complete_sections_dict.items(), key=lambda x: x[0]))
     return complete_sections_dict
-    
+
 
 # def get_sections_level_adder(filepath, level):
 #     complete_sections_dict = get_all_sections(filepath)
@@ -220,41 +221,47 @@ def process_pages(file_path):
 
 
 def dictionary_per_level_1(filepath):
-    dict_level_1={}
-    complete_sections_dict=get_all_sections(filepath)
-    
+    dict_level_1 = {}
+    complete_sections_dict = get_all_sections(filepath)
+
     for key in complete_sections_dict:
-        dict_level_1[key]=complete_sections_dict[key][0][1]
-    
+        dict_level_1[key] = complete_sections_dict[key][0][1]
+
     return dict_level_1
 
+
 def dictionary_per_level_2(filepath):
-    dict_level_2={}
-    complete_sections_dict=get_all_sections(filepath)
-    
+    dict_level_2 = {}
+    complete_sections_dict = get_all_sections(filepath)
+
     for key in complete_sections_dict:
-        dict_level_2[key]=complete_sections_dict[key][1][1]
-    
+        dict_level_2[key] = complete_sections_dict[key][1][1]
+
     return dict_level_2
 
+
 def dictionary_per_level_3(filepath):
-    dict_level_3={}
-    complete_sections_dict=get_all_sections(filepath)
-    
+    dict_level_3 = {}
+    complete_sections_dict = get_all_sections(filepath)
+
     for key in complete_sections_dict:
-        dict_level_3[key]=complete_sections_dict[key][2][1]
-    
+        dict_level_3[key] = complete_sections_dict[key][2][1]
+
     return dict_level_3
 
+
 def extend_pages_df(file_path, pages_df):
-    dictionary1=dictionary_per_level_1(file_path)
-    dictionary2=dictionary_per_level_2(file_path)
-    dictionary3=dictionary_per_level_3(file_path)
+    dictionary1 = dictionary_per_level_1(file_path)
+    dictionary2 = dictionary_per_level_2(file_path)
+    dictionary3 = dictionary_per_level_3(file_path)
     pages_df['real_page_num'] = pages_df['page_number'].apply(
         get_number_translator(file_path))
-    pages_df['section_level_1'] = pages_df['page_number'].apply(lambda x: dictionary1[x])
-    pages_df['section_level_2'] = pages_df['page_number'].apply(lambda x: dictionary2[x])
-    pages_df['section_level_3'] = pages_df['page_number'].apply(lambda x: dictionary3[x])
+    pages_df['section_level_1'] = pages_df['page_number'].apply(
+        lambda x: dictionary1[x])
+    pages_df['section_level_2'] = pages_df['page_number'].apply(
+        lambda x: dictionary2[x])
+    pages_df['section_level_3'] = pages_df['page_number'].apply(
+        lambda x: dictionary3[x])
     return pages_df
 
 

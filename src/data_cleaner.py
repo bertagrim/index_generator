@@ -4,7 +4,7 @@ import pathlib
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-from config import body_limits, section_limits
+from config import part_limits
 import pandas as pd
 
 stop_words = stopwords.words("english")
@@ -62,26 +62,36 @@ def fill_sections_na(data_frame):
     return data_frame
 
 
-def get_toc(data_frame):
+def get_toc(file_name, data_frame):
     fill_sections_na(data_frame)
-    toc = data_frame[
-        data_frame.section_level_1.str.match(
-            "CONTENTS|Contents|contents|Table of Contents|Table of contents"
-        ) |
-        data_frame.section_level_2.str.match(
-            "CONTENTS|Contents|contents|Table of Contents|Table of contents"
-        ) |
-        data_frame.section_level_3.str.match(
-            "CONTENTS|Contents|contents|Table of Contents|Table of contents"
-        )
-    ]
+
+    base_name = pathlib.Path(file_name).stem
+    toc = None
+    if 'toc' in part_limits[base_name]:
+        [start, end] = part_limits[base_name]['toc']
+        toc = data_frame[
+            (data_frame.page_number >= start) & (data_frame.page_number <= end)
+        ]
+    else:
+        toc = data_frame[
+            data_frame.section_level_1.str.match(
+                "CONTENTS|Contents|contents|Table of Contents|Table of contents"
+            ) |
+            data_frame.section_level_2.str.match(
+                "CONTENTS|Contents|contents|Table of Contents|Table of contents"
+            ) |
+            data_frame.section_level_3.str.match(
+                "CONTENTS|Contents|contents|Table of Contents|Table of contents"
+            )
+        ]
+
     toc.reset_index(drop=True, inplace=True)
     return toc
 
 
 def get_body(file_name, data_frame):
     base_name = pathlib.Path(file_name).stem
-    [start, end] = section_limits['body'][base_name]
+    [start, end] = part_limits[base_name]['body']
     # pd.to_numeric(data_frame.page_number)
     # print(data_frame.page_number)
 
@@ -92,36 +102,55 @@ def get_body(file_name, data_frame):
     return body
 
 
-def get_index(data_frame):
+def get_index(file_name, data_frame):
     fill_sections_na(data_frame)
-    index = data_frame[
-        data_frame.section_level_1.str.match(
-            "INDEX|index|Index|Subject Index|Name Index|Language Index|Citation Index|General Index|Author Index|Indicies"
-        ) |
-        data_frame.section_level_2.str.match(
-            "INDEX|index|Index|Subject Index|Name Index|Language Index|Citation Index|General Index|Author Index|Indicies"
-        ) |
-        data_frame.section_level_3.str.match(
-            "INDEX|index|Index|Subject Index|Name Index|Language Index|Citation Index|General Index|Author Index|Indicies"
-        )
-    ]
+
+    base_name = pathlib.Path(file_name).stem
+    index = None
+    if 'index' in part_limits[base_name]:
+        [start, end] = part_limits[base_name]['index']
+        index = data_frame[
+            (data_frame.page_number >= start) & (data_frame.page_number <= end)
+        ]
+    else:
+        index = data_frame[
+            data_frame.section_level_1.str.match(
+                "INDEX|index|Index|Subject Index|Name Index|Language Index|Citation Index|General Index|Author Index|Indicies"
+            ) |
+            data_frame.section_level_2.str.match(
+                "INDEX|index|Index|Subject Index|Name Index|Language Index|Citation Index|General Index|Author Index|Indicies"
+            ) |
+            data_frame.section_level_3.str.match(
+                "INDEX|index|Index|Subject Index|Name Index|Language Index|Citation Index|General Index|Author Index|Indicies"
+            )
+        ]
     index.reset_index(drop=True, inplace=True)
     return index
 
 
-def get_biblio(data_frame):
+def get_biblio(file_name, data_frame):
     fill_sections_na(data_frame)
-    biblio = data_frame[
-        data_frame.section_level_1.str.match(
-            "REFERENCES|References|references|Bibliography|bibliography|Works cited|Selected HistoricalWorks on Linear Algebra"
-        ) |
-        data_frame.section_level_2.str.match(
-            "REFERENCES|References|references|Bibliography|bibliography|Works cited|Selected HistoricalWorks on Linear Algebra"
-        ) |
-        data_frame.section_level_3.str.match(
-            "REFERENCES|References|references|Bibliography|bibliography|Works cited|Selected HistoricalWorks on Linear Algebra"
-        )
-    ]
+
+    base_name = pathlib.Path(file_name).stem
+    biblio = None
+
+    if 'index' in part_limits[base_name]:
+        [start, end] = part_limits[base_name]['index']
+        biblio = data_frame[
+            (data_frame.page_number >= start) & (data_frame.page_number <= end)
+        ]
+    else:
+        biblio = data_frame[
+            data_frame.section_level_1.str.match(
+                "REFERENCES|References|references|Bibliography|bibliography|Works cited|Selected HistoricalWorks on Linear Algebra"
+            ) |
+            data_frame.section_level_2.str.match(
+                "REFERENCES|References|references|Bibliography|bibliography|Works cited|Selected HistoricalWorks on Linear Algebra"
+            ) |
+            data_frame.section_level_3.str.match(
+                "REFERENCES|References|references|Bibliography|bibliography|Works cited|Selected HistoricalWorks on Linear Algebra"
+            )
+        ]
     biblio.reset_index(drop=True, inplace=True)
     return biblio
 
@@ -165,7 +194,7 @@ def clean_text(text_data):
 
 
 def split_data(file_name, data_frame):
-    toc = get_toc(data_frame)
+    toc = get_toc(file_name, data_frame)
     body = get_body(file_name, data_frame)
     index = get_index(data_frame)
     biblio = get_biblio(data_frame)

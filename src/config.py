@@ -8,7 +8,7 @@
 #   'biblio': [201, 205],
 #   'index': [206, 215]
 # }
-section_limits = {
+part_limits = {
     '2015_Book_LinearAlgebra': {
         'body': [12, 311]
     },
