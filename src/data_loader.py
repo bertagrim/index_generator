@@ -16,6 +16,11 @@ def get_pdf_filepaths(folder_path):
     pattern = str(absolute_folder_path / "*.pdf")
     return glob(pattern)
 
+def get_agg_dfs_filepaths(folder_path):
+    absolute_folder_path = pathlib.Path(folder_path).resolve()
+    pattern = str(absolute_folder_path / 'aggregated.csv')
+    return glob(pattern)
+
 
 # def extend_pages_df(file_path, pages_df):
 #     pages_df['real_page_num'] = pages_df['page_number'].apply(
