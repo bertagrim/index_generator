@@ -9,6 +9,7 @@ data/**/*.pdf
 data/**/*.csv
 data/**/*.txt
 models/**/*.sav
+images/**/*.png
 
 
 .DS_Store
