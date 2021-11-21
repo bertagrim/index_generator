@@ -10,6 +10,7 @@ data/**/*.csv
 data/**/*.txt
 models/**/*.sav
 images/**/*.png
+data/**/*.md
 
 
 .DS_Store
