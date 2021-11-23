@@ -182,20 +182,6 @@ def get_all_sections(filepath):
     return complete_sections_dict
 
 
-# def get_sections_level_adder(filepath, level):
-#     complete_sections_dict = get_all_sections(filepath)
-
-#     def add_sections_level(x):
-#         sections = complete_sections_dict[x]
-#         if level == 1:
-#             return sections[0][1]
-#         elif level == 2 and get_depth(filepath) == level:
-#             return sections[x][1][1]
-#         elif level == 3 and get_depth(filepath) == level:
-#             return sections[x][2][1]
-#     return add_sections_level
-
-
 def process_pages(file_path):
     """
     returns a list of lists that have as first element the content of one page and 
@@ -212,8 +198,6 @@ def process_pages(file_path):
 
         # recover hyphen-splitter sentences
         pattern_line_break_1 = re.compile(r"-\n")
-        # recover sentences split not preceded by a period and followed by lowercase character. I added upper case character, number, parentheses or quotation marks. Problem is that I was losing the first sentences of each page, because they were attached to the header
-        # pattern_line_break_2 = re.compile(r"(?<![.?¿!¡º])\s*\n(?=\s*[a-zA-Z0-9\(\)\'\"])")
         pattern_line_break_2 = re.compile(r"(?<![.?¿!¡º])\s*\n(?=\s*[a-z])")
 
         content_processed = pattern_line_break_1.sub("", content)

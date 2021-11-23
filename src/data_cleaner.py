@@ -92,8 +92,6 @@ def get_toc(file_name, data_frame):
 def get_body(file_name, data_frame):
     base_name = pathlib.Path(file_name).stem
     [start, end] = part_limits[base_name]['body']
-    # pd.to_numeric(data_frame.page_number)
-    # print(data_frame.page_number)
 
     body = data_frame[
         (data_frame.page_number >= start) & (data_frame.page_number <= end)
