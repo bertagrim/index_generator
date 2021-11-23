@@ -2,7 +2,6 @@ import pathlib
 from glob import glob
 import pandas as pd
 from sentence_splitter import SentenceSplitter
-from pdf_reader import process_pages, get_number_translator
 
 pd.options.mode.chained_assignment = None
 pd.set_option('display.max_rows', None)
@@ -16,16 +15,17 @@ def get_pdf_filepaths(folder_path):
     pattern = str(absolute_folder_path / "*.pdf")
     return glob(pattern)
 
+
 def get_agg_dfs_filepaths(folder_path):
     absolute_folder_path = pathlib.Path(folder_path).resolve()
     pattern = str(absolute_folder_path / '**/aggregated.csv')
     return glob(pattern)
 
+
 def get_agg_dfs_filepaths_philosophy(folder_path):
     absolute_folder_path = pathlib.Path(folder_path).resolve()
     pattern = str(absolute_folder_path / 'philosophy/**/aggregated.csv')
     return glob(pattern)
-
 
 
 def list_lines(pages_df):

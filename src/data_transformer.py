@@ -22,29 +22,34 @@ nlp = spacy.load('en_core_web_sm')
 # 1. Get candidates plus frequencies
 
 def create_candidates_list(bigrams_contexts):
-    candidates=[]
-    dismiss=['-','i','d','m','the','is','—', 'so-', 'notice-', 'nt', 'wo', 'temporal-', '–', 'value-', 'numbers-', 'à-vis', 'de', 'nitions', 'speci', 'elementsâ•', 'cation', 'nability', 'nition', '…', '®', 'ned',  'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-', 'equilibrium-', 'af12', 'g', 'neutrality-','along-']
+    candidates = []
+
+    # TODO: find a more elegant way to deal with this
+    dismiss = [
+        '-', 'i', 'd', 'm', 'the', 'is', '—', 'so-', 'notice-', 'nt', 'wo', 'temporal-', '–', 'value-', 'numbers-', 'à-vis', 'de', 'nitions', 'speci', 'elementsâ•', 'cation', 'nability', 'nition',
+        '…', '®', 'ned',  'distributiveâ•', 'elementâ•', 's', '/', 'he', '.', 'viz', 'tr-1', 'tr-2', 'tr-3', 'tr-50', 'r-1a', 'r-1', 'efficient-', 'equilibrium-', 'af12', 'g', 'neutrality-', 'along-'
+    ]
     for item in bigrams_contexts:
-        doc=nlp((' ').join(item[1]))
+        doc = nlp((' ').join(item[1]))
         for word in item[1]:
-            word=word.replace('—','-')
-            word=word.replace('-','-')
+            word = word.replace('—', '-')
+            word = word.replace('-', '-')
             if re.match("[a-z]+-[a-z]+(-[a-z])*", word):
                 candidates.append([word, item[1], item[2], 'NOUN'])
-                dismiss+=word.split('-')
+                dismiss += word.split('-')
         for w in doc:
             if not(str(w) in dismiss):
                 candidates.append([str(w), item[1], item[2], w.pos_])
         for w in item[0]:
             candidates.append([w, item[1], item[2], 'CHUNK'])
-    return candidates 
+    return candidates
 
 
 def get_raw_sentences(raw_sent):
     tokens = word_tokenize(raw_sent)
-    no_weird_dash=[w.replace('—','-') for w in tokens]
-    no_weird_dash2=[w.replace('-','-') for w in no_weird_dash]
-    no_slash=sum([w.split('/') for w in no_weird_dash2],[])
+    no_weird_dash = [w.replace('—', '-') for w in tokens]
+    no_weird_dash2 = [w.replace('-', '-') for w in no_weird_dash]
+    no_slash = sum([w.split('/') for w in no_weird_dash2], [])
     lowercased = [w.lower() for w in no_slash]
     no_punct = [word for word in lowercased if (
         word.isalpha() or re.match("[a-z]+-[a-z]+(-[a-z])*", word))]
@@ -54,8 +59,6 @@ def get_raw_sentences(raw_sent):
 
 def get_candidates_and_frequencies(split_data):
     by_line_body_content = split_data['by_line_body']
-
-    # print(list(by_line_body_content))
 
     sentences = [
         sentence.split() for sentence in by_line_body_content['clean_content']
@@ -133,7 +136,7 @@ def get_frequency_calculator(book_length, freq_ngrams):
     def assign_frequency(candidate_keyword):
         count = freq_ngrams.get(candidate_keyword)
         if candidate_keyword not in freq_ngrams:
-            #print(dismiss)
+            # print(dismiss)
             print(candidate_keyword + " is not in freq_ngrams!!")
             return 0
         else:
@@ -235,11 +238,11 @@ def add_importance(candidates_df):
 
 def return_position_in_context(row):
     list_words = row['raw_context'].split(' ')
-    list_words=sum([w.split('/') for w in list_words],[])
-    list_words=sum([w.split('–') for w in list_words],[])
-        
+    list_words = sum([w.split('/') for w in list_words], [])
+    list_words = sum([w.split('–') for w in list_words], [])
+
     word = row['candidate_keyword']
-    #if word not in list_words:
+    # if word not in list_words:
     #   print(word, row['raw_context'])
     if len(list_words) == 1:
         return 0
@@ -275,7 +278,8 @@ def clean_list_names(x):
 def find_named_entities(df_pages_body):
     named_entities = []
     for page in df_pages_body.content:
-        page_named_entities = re.findall('(?<=[a-zA-Z] )[A-Z]+[a-z]+[A-Z]*[a-z]*', page)
+        page_named_entities = re.findall(
+            '(?<=[a-zA-Z] )[A-Z]+[a-z]+[A-Z]*[a-z]*', page)
         for item in page_named_entities:
             named_entities.append(clean_list_names(item))
     return named_entities
@@ -454,10 +458,10 @@ def add_is_in_index(candidates_df, indexes_list):
 # 11. Aggregate lines with duplicated candidate_keyword
 
 def aggregate_by_candidate(candidates_df):
-    candidates_df=candidates_df.drop(
+    candidates_df = candidates_df.drop(
         columns=['clean_context', 'raw_context'], errors='ignore'
     )
-    candidates_df=candidates_df.groupby(
+    candidates_df = candidates_df.groupby(
         [
             'candidate_keyword',
             'length',
@@ -468,5 +472,5 @@ def aggregate_by_candidate(candidates_df):
             'is_in_index',
             'tfidf'
         ], as_index=False
-    ).agg({'importance': np.mean, 'position_in_context': np.mean, 'POS':lambda x: scipy.stats.mode(x)[0]})
+    ).agg({'importance': np.mean, 'position_in_context': np.mean, 'POS': lambda x: scipy.stats.mode(x)[0]})
     return candidates_df
