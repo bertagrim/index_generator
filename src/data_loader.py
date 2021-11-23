@@ -18,20 +18,14 @@ def get_pdf_filepaths(folder_path):
 
 def get_agg_dfs_filepaths(folder_path):
     absolute_folder_path = pathlib.Path(folder_path).resolve()
-    pattern = str(absolute_folder_path / 'aggregated.csv')
+    pattern = str(absolute_folder_path / '**/aggregated.csv')
     return glob(pattern)
 
+def get_agg_dfs_filepaths_philosophy(folder_path):
+    absolute_folder_path = pathlib.Path(folder_path).resolve()
+    pattern = str(absolute_folder_path / 'philosophy/**/aggregated.csv')
+    return glob(pattern)
 
-# def extend_pages_df(file_path, pages_df):
-#     pages_df['real_page_num'] = pages_df['page_number'].apply(
-#         get_number_translator(file_path))
-#     pages_df['section_level_1'] = pages_df['page_number'].apply(
-#         get_sections_level_adder(file_path, 1))
-#     pages_df['section_level_2'] = pages_df['page_number'].apply(
-#         get_sections_level_adder(file_path, 2))
-#     pages_df['section_level_3'] = pages_df['page_number'].apply(
-#         get_sections_level_adder(file_path, 3))
-#     return pages_df
 
 
 def list_lines(pages_df):
@@ -50,20 +44,6 @@ def list_lines(pages_df):
                 [item[0], item[1], item[2], item[3], item[4], item[5]]
             )
     return lines_list
-
-
-# def load_data_frames(file_path):
-#     page_list = process_pages(file_path)
-#     pages_df = extend_pages_df(
-#         file_path,
-#         pd.DataFrame(page_list, columns=['content', 'page_number'])
-#     )
-#     lines_df = pd.DataFrame(list_lines(pages_df), columns=pages_df.columns)
-
-#     return {
-#         'by_page': pages_df,
-#         'by_line': lines_df
-#     }
 
 
 def load_page_and_line_indexes(processed_data_dir_path, pdf_filepath):

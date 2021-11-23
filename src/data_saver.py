@@ -51,6 +51,7 @@ def save_split_data(processed_data_dir_path, split_data):
         by_page_body_file_path, encoding="utf8", mode='w+'
     )
 
+
 def save_aggregated_data(processed_data_dir_path, agg_df, file_name):
     file_folder_path = get_or_create_file_folder_path(
         processed_data_dir_path,
@@ -72,3 +73,80 @@ def save_raw_indexes_list(processed_data_dir_path, pdf_filepath, raw_indexes_lis
     lines = [(",").join(sublist)+"\n" for sublist in raw_indexes_list]
     f.writelines(lines)
     f.close()
+
+
+def get_line_numbers_concat(line_nums):
+    seq = []
+    final = []
+    last = 0
+
+    for index, val in enumerate(line_nums):
+
+        if last + 1 == val or last + 2 == val or index == 0:
+            seq.append(val)
+            last = val
+        else:
+            if len(seq) > 1:
+                final.append(str(seq[0]) + '-' + str(seq[len(seq)-1]))
+            else:
+                final.append(str(seq[0]))
+            seq = []
+            seq.append(val)
+            last = val
+
+        if index == len(line_nums) - 1:
+            if len(seq) > 1:
+                final.append(str(seq[0]) + '-' + str(seq[len(seq)-1]))
+            else:
+                final.append(str(seq[0]))
+
+    final_str = ', '.join(map(str, final))
+    return final_str
+
+
+def get_markdown_index(candidates_dataframe, pages_body_dataframe):
+    keywords = candidates_dataframe[
+        candidates_dataframe.is_in_index == 1
+    ]['candidate_keyword'].tolist()
+    dict_pagination = {}
+    for kw in keywords:
+        pages_kw = pages_body_dataframe[pages_body_dataframe['clean_content'].str.contains(
+            kw)]
+        pages = pages_kw['real_page_num'].tolist()
+        dict_pagination[kw] = get_line_numbers_concat(pages)
+    md_string = '## Index\n'
+    last_unigram = ''
+    for word in dict_pagination:
+        if len(word.split(' ')) == 1:
+            md_string += '- '+word+' '+dict_pagination[word]+'\n'
+            last_unigram = word
+        else:
+            if last_unigram in word.split(' '):
+                md_string += '    - '+word+' '+dict_pagination[word]+'\n'
+            else:
+                md_string += '- '+word+' '+dict_pagination[word]+'\n'
+    return md_string
+
+
+def get_txt_index(candidates_dataframe, pages_body_dataframe):
+    keywords = candidates_dataframe[
+        candidates_dataframe.is_in_index == 1
+    ]['candidate_keyword'].tolist()
+    dict_pagination = {}
+    for kw in keywords:
+        pages_kw = pages_body_dataframe[pages_body_dataframe['clean_content'].str.contains(
+            kw)]
+        pages = pages_kw['real_page_num'].tolist()
+        dict_pagination[kw] = get_line_numbers_concat(pages)
+    txt_string = 'Index\n\n'
+    last_unigram = ''
+    for word in dict_pagination:
+        if len(word.split(' ')) == 1:
+            txt_string += '- '+word+' '+dict_pagination[word]+'\n\n'
+            last_unigram = word
+        else:
+            if last_unigram in word.split(' '):
+                txt_string += '    - '+word+' '+dict_pagination[word]+'\n\n'
+            else:
+                txt_string += '- '+word+' '+dict_pagination[word]+'\n\n'
+    return txt_string

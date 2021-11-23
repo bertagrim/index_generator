@@ -14,3 +14,5 @@ data/**/*.md
 
 
 .DS_Store
+
+.vscode
