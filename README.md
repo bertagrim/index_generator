@@ -1,21 +1,22 @@
 # index_generator
 
-This is the result of my final project for the AllWomen DS bootcamp. The aim of this project was to explore whether it is possible to automatically generate the analytic index (sometimes called "back-of-the-book index") of academic book.
+This is the result of my final project for the AllWomen Data Science bootcamp. The aim of this project was to explore whether it is possible to automatically generate the analytic index (sometimes called "back-of-the-book index") of an academic book.
 
 Analytic indices are typically found at the end of books and contain an alphabetized list of important concepts/names found in the book with references of the pages where they can be found. They also contain some information about relations of similarity between different keywords as well as lists of secondary keywords (deriving from a main keyword).
 
 ![A very old index](./doc/Novus_Atlas_Sinensis_-_First_page_of_the_index.jpg "A very old index")
 
 
-These indices are present in practically all academic books and they make their reading much easier while also providing a very exhaustive overview of their contents. Their development is, nevertheless, very time consuming and a rather tedious task (I know this first hand, since some years ago I was asked to make one: https://link.springer.com/book/10.1057/9781137472519), so it seems like it would be great to automatize it.
+These indices are present in practically all academic books and they make their reading much easier while also providing a very exhaustive overview of their contents. Their development is, nevertheless, very time consuming and a rather tedious task (I know this first hand, since some years ago I was asked to make one for this book: https://link.springer.com/book/10.1057/9781137472519), so it seems like it would be a good thing to automatize it.
 
 From the point of view of NLP, this is a keyword extraction problem. My approach was to treat it as a supervised binary classification task.
 
 The idea was to create a dataset of candidate keywords, extract linguistic features from them (in some cases, relative to their context -- i.e. book, section, sentence), and try to predict whether they were supposed to go into the index based on these.
 
 ## Pipeline
+---
 
-My starting point were 22 books in pdf (all containing analytics indices). Their topics were varied, but predominantly about philosophy and linguistics (these were simply the books I had available).
+My starting point were 22 books in pdf (all including an analytics index). Their topics were varied, but they were predominantly about philosophy and linguistics (these were simply the books I had available).
 
 1) **From PDF to text**. Output: the content of each book in txt format. 
 2) **Text preprocessing**. Output: one dataset per book consisting of all the clean sentences and metadata for each sentence (page number, section…).
@@ -24,6 +25,7 @@ My starting point were 22 books in pdf (all containing analytics indices). Their
 5) **Index generation**. Output: A formatted (and editable) draft analytic index for a given book.
 
 ## The final dataset
+---
 
 857000 candidate keywords / 10 linguistic features
 
@@ -48,16 +50,18 @@ Target variable: Is it in the index?
 
 
 ## Model
+---
 
 My final model was a XGBoost classifier. And my resulting metrics were:
 
-
+<p align="center">
 | Metric| Value|
 | ------------- |:-------------:|
-| Accuracy       | 0.99          |
+| Accuracy| 0.99|
 | Precision| 0.72 |
 | Recall| 0.23|
 | F1| 0.35|
+<\p>
 
 
 Training the model with oversampling (SMOTE) gave a much better recall (trading off precision). This may be preferable if the resulting index is to serve a human indexer as a tool from which to extract the actual final index (since it's easier to remove keywords than to add them). 
@@ -71,7 +75,7 @@ Training the model with oversampling (SMOTE) gave a much better recall (trading 
 
 However, this is only at the expense of introducing invented observations into our dataset as well as of higher computational costs.
 
-Overall, I am realitvely satisfied with these results. Firstly, as far as I know, they are comparable with the metrics gotten by other attempts to automatize index generation, which tells me I'm not completely off track. 
+Overall, I am relaitvely satisfied with these results. Firstly, as far as I know, they are comparable with the metrics gotten by other attempts to automatize index generation, which tells me I'm not completely off track. 
 
 More generally, it was to be expected that this task would be difficult to fully automatize. After all, it is a job that's difficult for us, humans, in the first place. To quote the Chicago Manual of Style:
 
@@ -86,6 +90,7 @@ For example: technical books tend to omit author names, while humanities books t
 This final observation led me to consider the hypothesis that specialized models for different academic fields would do better than general models like the one I trained.
 
 ## A specialized model for philosophy books
+---
 
 To test this hypothesis (to a rather limited extent), I trained a model on a subset of the original set of books, consisting of 10 philosophy books.
 
@@ -101,6 +106,7 @@ The results were indeed considerably better:
 
 
 ## Final remarks
+---
 
 There are plenty of things to improve. After all, this work was done rather hastily, over a period of 6 weeks. If I had more time, I would work on the following:
 
