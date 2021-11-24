@@ -51,14 +51,14 @@ Target variable: Is it in the index?
 
 My final model was a XGBoost classifier. And my resulting metrics were:
 
-<p align="center">
+
 | Metric| Value|
 | ------------- |:-------------:|
 | Accuracy       | 0.99          |
 | Precision| 0.72 |
 | Recall| 0.23|
 | F1| 0.35|
-</p>
+
 
 Training the model with oversampling (SMOTE) gave a much better recall (trading off precision). This may be preferable if the resulting index is to serve a human indexer as a tool from which to extract the actual final index (since it's easier to remove keywords than to add them). 
 
