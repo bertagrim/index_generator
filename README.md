@@ -67,6 +67,7 @@ My best model was an XGBoost classifier. And my resulting metrics were:
 | Recall| 0.23|
 | F1| 0.35|
 
+Since the task we're dealing with is one in which we need to identify rare events (in this case, being in the index is rare), the dataset is extremely imbalanced wrt the target variable. Thus, accuracy is irrelevant for us: the model is very accurate, because it almost always predicts keywords to not be int he index. What we care about is precision (how exact the model is) and recall (how complete it is). In this case, we are doing fairly ok with precision, but not that well with recall. This means that many of words classified as being in the index are indeed in the index (72%), but that we are only catching 23% of the words in the index as being there.
 
 Here's a representation of feature importance for this model (based on SHAP values):
 <p align="center">
@@ -74,7 +75,7 @@ Here's a representation of feature importance for this model (based on SHAP valu
 </p>
 <!-- Update with better plot and comment -->
 
-Training the model with oversampling (SMOTE) gave a much better recall (with a trade off on precision). This may be preferable if the resulting index is to serve a human indexer as a tool from which to extract the actual final index (since it's easier to remove keywords than to add them). 
+Training the model with oversampling (SMOTE) gave a much better recall (with a trade off on precision, of course). This may be preferable if the resulting index is to serve a human indexer as a tool from which to extract the actual final index, since it means that many more words that are actually in the index are being identified as such by my model (and I assume that, for a human indexer, it'd easier to remove keywords than to add them). 
 
 | Metric| Value|
 | ------------- |:-------------:|
@@ -99,7 +100,7 @@ This final observation led me to consider the hypothesis that specialized models
 
 To test this hypothesis (admittedly, to a rather limited extent), I trained a model on a subset of the original set of books, consisting of 10 philosophy books.
 
-The results were indeed considerably better:
+The results were indeed considerably better on all counts (bear in mind that these are the results without applying SMOTE):
 
 | Metric| Value|
 | ------------- |:-------------:|
