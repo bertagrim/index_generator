@@ -67,7 +67,7 @@ My best model was an XGBoost classifier. And my resulting metrics were:
 | Recall| 0.23|
 | F1| 0.35|
 
-Since the task we're dealing with is one in which we need to identify rare events (in this case, being in the index is rare), the dataset is extremely imbalanced wrt the target variable. Thus, accuracy is irrelevant for us: the model is very accurate, because it almost always predicts keywords to not be int he index. What we care about is precision (how exact the model is) and recall (how complete it is). In this case, we are doing fairly ok with precision, but not that well with recall. This means that many of words classified as being in the index are indeed in the index (72%), but that we are only catching 23% of the words in the index as being there.
+Since the task we're dealing with is one in which we need to identify rare events (in this case, being in the index is rare), the dataset is extremely imbalanced wrt the target variable. Thus, accuracy is irrelevant for us: the model is very accurate, because it almost always predicts keywords to not be in the index. What we care about is precision (how exact the model is) and recall (how complete it is). In this case, we are doing fairly ok with precision, but not that well with recall. This means that many of words classified as being in the index are indeed in the index (72%), but that we are only catching 23% of the words in the index as being there.
 
 Here's a representation of feature importance for this model (based on SHAP values):
 <p align="center">
