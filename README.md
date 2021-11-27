@@ -71,7 +71,7 @@ Since the task we're dealing with is one in which we need to identify rare event
 
 Here's a representation of feature importance for this model (based on SHAP values):
 <p align="center">
-<img src="./doc/explain.jpg" alt="drawing" width="500"/>
+<img src="./doc/shap_beeswarm_xgb1.png" alt="drawing" width="500"/>
 </p>
 <!-- Update with better plot and comment -->
 
