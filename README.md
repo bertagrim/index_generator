@@ -142,8 +142,11 @@ This work was done rather hastily, over a period of 6 weeks, so there are plenty
 </p>
 
 
+## References
 
+Wu et al (2013) *Can back-of-the-book indexes be automatically created?*. CIKM '13: Proceedings of the 22nd ACM international conference on Information & Knowledge Management, pp. 1745–1750.
 
+Koutropolou and Galloupoulos (2019) *TMG-BoBI: Generating Back-of-the-Book Indexes with the Text-to-Matrix Generator*. 10th International Conference on Information, Intelligence, Systems and Applications (IISA), pp. 1-8.
 
 
 
