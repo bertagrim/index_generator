@@ -75,6 +75,8 @@ Here's a representation of feature importance for this model (based on SHAP valu
 </p>
 <!-- Update with better plot and comment -->
 
+It's good to see some of my intuitions confirmed, like that being a named entity or being a named author are decisive for being in the index. It's also nice to see confirmed that the later a word appears in a sentence the more likely it is that it is in the index. I also find interesting that frequency has such a big impact on the predictions. I did not expect it to be that blatant. Another interesting result concerns the feature I call "importance". I would have thought that the more important its context is, the more likely it is that the word is in the index, but apparently it's the opposite. This is one of the things that I'd like to understand better in the future. My guess is that my way of calculating importance via sentence embeddings and cosine similarity is somehow problematic or just does not capture what I think it's capturing.
+
 Training the model with oversampling (SMOTE) gave a much better recall (with a trade off on precision, of course). This may be preferable if the resulting index is to serve a human indexer as a tool from which to extract the actual final index, since it means that many more words that are actually in the index are being identified as such by my model (and I assume that, for a human indexer, it'd easier to remove keywords than to add them). 
 
 | Metric| Value|
