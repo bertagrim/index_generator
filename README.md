@@ -29,7 +29,7 @@ The idea was to create a dataset of candidate keywords, extract linguistic featu
 
 ## Pipeline
 
-My starting point were 22 books in pdf (all including an analytics index). Their topics were varied, but they were predominantly about philosophy and linguistics (these were simply the books I had available).
+My starting point were 22 books in pdf (all including an analytic index). Their topics were varied, but they were predominantly about philosophy and linguistics (these were simply the books I had available).
 
 ![Pipeline](./doc/pipeline.jpg "Pipeline")
 
@@ -37,7 +37,7 @@ My starting point were 22 books in pdf (all including an analytics index). Their
 
 857000 candidate keywords / 10 linguistic features
 
-The candidate keywords consisted of unigrams and bigrams (if I went beyond that, my personal computer couldn't handle the size of the dataset!) extracted after a relatively moderate cleaning process. The reason why the cleaning can not be too aggresive is that we risk missing out on potential index keywords.
+The candidate keywords consisted of unigrams and bigrams (if I go beyond that, my personal computer cannot handle the size of the dataset!) extracted after a relatively moderate cleaning process. The reason why the cleaning can not be too aggresive is that we risk missing out on potential index keywords.
 
 The main part of my project was the extraction of the linguistic features. Some of them are simply motivated by an intuition on my part of what could be significant for appearing in an index (in part based on my own experience as an indexer). But a few of them I adopted from similar works (see Wu et al [2013], Koutropolou and Galloupoulos [2019]).
 
@@ -67,7 +67,7 @@ My best model was an XGBoost classifier. And my resulting metrics were:
 | Recall| 0.23|
 | F1| 0.35|
 
-Since the task we're dealing with is one in which we need to identify rare events (in this case, being in the index is rare), the dataset is extremely imbalanced wrt the target variable. Thus, accuracy is irrelevant for us: the model is very accurate, because it almost always predicts keywords to not be in the index. What we care about is precision (how exact the model is) and recall (how complete it is). In this case, we are doing fairly ok with precision, but not that well with recall. This means that many of words classified as being in the index are indeed in the index (72%), but that we are only catching 23% of the words in the index as being there.
+Since the task we're dealing with is one in which we need to identify rare events (in this case, being in the index is rare), the dataset is extremely imbalanced wrt the target variable. Thus, accuracy is irrelevant for us: the model is very accurate, because it almost always predicts keywords to not be in the index. What we care about is precision (how exact the model is) and recall (how complete it is). In this case, we are doing fairly ok with precision, but not that well with recall. This means that many (72%) of the words classified as being in the index are indeed in the index, but that we are only catching 23% of the words in the index as being there.
 
 Here's a representation of feature importance for this model (based on SHAP values):
 <p align="center">
@@ -77,7 +77,7 @@ Here's a representation of feature importance for this model (based on SHAP valu
 
 It's good to see some of my intuitions confirmed, like that being a named entity or being a named author are decisive for being in the index. It's also nice to see confirmed that the later a word appears in a sentence the more likely it is that it is in the index. I also find interesting that frequency has such a big impact on the predictions. I did not expect it to be that blatant. Another interesting result concerns the feature I call "importance". I would have thought that the more important its context is, the more likely it is that the word is in the index, but apparently it's the opposite. This is one of the things that I'd like to understand better in the future. My guess is that my way of calculating importance via sentence embeddings and cosine similarity is somehow problematic or just does not capture what I think it's capturing.
 
-Training the model with oversampling (SMOTE) gave a much better recall (with a trade off on precision, of course). This may be preferable if the resulting index is to serve a human indexer as a tool from which to extract the actual final index, since it means that many more words that are actually in the index are being identified as such by my model (and I assume that, for a human indexer, it'd easier to remove keywords than to add them). 
+Training the model with oversampling (SMOTE) gave a much better recall (with a trade-off on precision, of course). This may be preferable if the resulting index is to serve a human indexer as a tool from which to extract the actual final index, since it means that many more words that are actually in the index are being identified as such by my model (and I assume that, for a human indexer, it'd be easier to remove keywords than to add them). 
 
 | Metric| Value|
 | ------------- |:-------------:|
@@ -144,9 +144,9 @@ This work was done rather hastily, over a period of 6 weeks, so there are plenty
 
 ## References
 
-Wu et al (2013) *Can back-of-the-book indexes be automatically created?*. CIKM '13: Proceedings of the 22nd ACM international conference on Information & Knowledge Management, pp. 1745–1750.
-
 Koutropolou and Galloupoulos (2019) *TMG-BoBI: Generating Back-of-the-Book Indexes with the Text-to-Matrix Generator*. 10th International Conference on Information, Intelligence, Systems and Applications (IISA), pp. 1-8.
+
+Wu et al (2013) *Can back-of-the-book indexes be automatically created?*. CIKM '13: Proceedings of the 22nd ACM international conference on Information & Knowledge Management, pp. 1745–1750.
 
 
 
