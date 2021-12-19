@@ -403,8 +403,8 @@ def find_ngrams_index(text_data):
     return list_bigrams
 
 
-def get_raw_indexes_list(df_cann_lines_index):
-    df_cann_lines_index['ngrams'] = df_cann_lines_index.content.apply(
+def get_raw_indexes_list(df_lines_index):
+    df_lines_index['ngrams'] = df_lines_index.content.apply(
         find_ngrams_index
     )
     stop_words = stopwords.words("english")
@@ -421,21 +421,21 @@ def get_raw_indexes_list(df_cann_lines_index):
             clean_list_ngrams.append((' ').join(clean_ngram))
         return clean_list_ngrams
 
-    df_cann_lines_index.ngrams = df_cann_lines_index.ngrams.apply(clean_index)
+    df_lines_index.ngrams = df_lines_index.ngrams.apply(clean_index)
 
-    raw_list_indexes = df_cann_lines_index.ngrams.tolist()
+    raw_list_indexes = df_lines_index.ngrams.tolist()
 
-    return (raw_list_indexes, df_cann_lines_index)
+    return (raw_list_indexes, df_lines_index)
 
 
 def get_final_indexes(indexes_txt):
-    cann_clean_indexes_nosep = []
+    clean_indexes_nosep = []
     for item in indexes_txt:
         item = item.strip('\n')
         item = item.split(",")
-        cann_clean_indexes_nosep.append(item)
+        clean_indexes_nosep.append(item)
     final_indexes = [
-        (item, 1) for sublist in cann_clean_indexes_nosep for item in sublist if item != '']
+        (item, 1) for sublist in clean_indexes_nosep for item in sublist if item != '']
     return dict((set(final_indexes)))
 
 
@@ -457,6 +457,7 @@ def add_is_in_index(candidates_df, indexes_list):
 
 # 11. Aggregate lines with duplicated candidate_keyword
 
+# Perhaps I should not have done this step. Just keep all lines as they are to deal with polysemy
 def aggregate_by_candidate(candidates_df):
     candidates_df = candidates_df.drop(
         columns=['clean_context', 'raw_context'], errors='ignore'
