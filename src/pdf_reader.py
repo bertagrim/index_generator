@@ -42,7 +42,6 @@ def get_dict_pages(filepath):
             real_page = item['prefix']
         else:
             if item['style'] == 'r':
-                # transform to arabic numeral
                 real_page = [item['firstpagenum'], 'r']
             elif item['style'] == 'D':
                 real_page = [item['firstpagenum'], 'd']
@@ -87,7 +86,6 @@ def translate(filepath):
 
 def get_number_translator(filepath):
     trans_dict = None
-
     try:
         trans_dict = translate(filepath)
     except:
@@ -98,7 +96,6 @@ def get_number_translator(filepath):
             return x
         else:
             return trans_dict[x]
-
     return translate_number
 
 

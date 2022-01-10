@@ -35,6 +35,7 @@ def save_split_data(processed_data_dir_path, split_data):
     by_line_body_file_path = file_folder_path / "by_line_body.csv"
     by_line_toc_file_path = file_folder_path / "by_line_toc.csv"
     by_page_body_file_path = file_folder_path / "by_page_body.csv"
+
     split_data['by_line_index'].to_csv(
         by_line_index_file_path, encoding="utf8", mode='w+'
     )
